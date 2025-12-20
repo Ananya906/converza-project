@@ -88,7 +88,7 @@ async function seedAdmins() {
 
 // ----------------- MongoDB Connection -----------------
 mongoose
-    .connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/event-management", {
+    .connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
@@ -108,8 +108,8 @@ mongoose
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "krishna1234isha@gmail.com",
-        pass: "gwjk uagx grci zgjf",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
 });
 
