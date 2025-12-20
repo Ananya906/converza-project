@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/css/success.css">
+
+<div class="success-message">
+    <h1>🎉 Booking Confirmed! 🎉</h1>
+    
+    <p><%= message %></p>
+    
+    <div class="booking-detail">
+        <p><strong>Event:</strong> <%= eventName %></p>
+        <p><strong>Name:</strong> <%= bookingDetails.fullName %></p>
+        <p><strong>Tickets:</strong> <%= bookingDetails.ticketsQuantity %></p>
+        <p><strong>Total Paid:</strong> Rs. <%= bookingDetails.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></p>
+        <p><strong>Payment Method:</strong> <%= bookingDetails.paymentMethod %></p>
+    </div>
+    
+    
+    <a href="/events-list">Go back to Events List</a>
+</div>

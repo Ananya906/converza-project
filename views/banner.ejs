@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EventBanner Upgraded</title>
+
+    <!-- Public CSS (correct Express path) -->
+    <link rel="stylesheet" href="/css/banner.css">
+</head>
+
+<body>
+
+<header class="top">
+    <div class="brand">
+        EventBanner <span class="ai"></span>
+    </div>
+    <div class="hint"></div>
+</header>
+
+<main class="wrap">
+
+    <aside class="panel">
+        <h3>Create banner</h3>
+
+        <label>
+            Category
+            <select id="category">
+                <option value="dj">DJ / Music</option>
+                <option value="birthday">Birthday</option>
+                <option value="wedding">Wedding</option>
+                <option value="corporate">Corporate</option>
+                <option value="concert">Concert</option>
+                <option value="festival">Festival</option>
+                <option value="college">College</option>
+                <option value="workshop">Workshop</option>
+            </select>
+        </label>
+
+        <label>
+            Event name
+            <input id="title" placeholder="Event Title">
+        </label>
+
+        <label>
+            Tagline
+            <input id="tag" placeholder="Short tagline">
+        </label>
+
+        <label>
+            Date & Time
+            <input id="time" placeholder="Sat, Dec 6 · 7:00 PM">
+        </label>
+
+        <label>
+            Venue
+            <input id="venue" placeholder="Venue or address">
+        </label>
+
+        <label>
+            Contact
+            <input id="contact" placeholder="Phone / WhatsApp">
+        </label>
+
+        <label>
+            Orientation
+            <select id="orientation">
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+            </select>
+        </label>
+
+        <div class="row">
+            <button id="aiBtn">✨ Generate (AI-style)</button>
+            <button id="previewBtn">Preview</button>
+        </div>
+
+        <div class="row">
+            <button id="createBtn">Create Event & QR</button>
+            <button id="downloadBtn">Download PNG</button>
+        </div>
+
+        <label>
+            Upload background
+            <input type="file" id="bgUpload" accept="image/*">
+        </label>
+
+        <label>
+            Upload logo
+            <input type="file" id="logoUpload" accept="image/*">
+        </label>
+
+        <div class="small">
+            Tip: Upload square images for logos. Use a short booking URL to keep QR scannable.
+        </div>
+    </aside>
+
+    <section class="templates">
+        <div class="toolbar">
+            <label>
+                Filter
+                <select id="filter">
+                    <option value="">All</option>
+                </select>
+            </label>
+        </div>
+
+        <div id="grid" class="grid"></div>
+    </section>
+
+    <aside class="preview">
+        <h4>Preview</h4>
+        <div id="previewArea" class="previewArea"></div>
+    </aside>
+
+</main>
+
+<!-- JS files -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<!-- Correct static path -->
+<script src="/js/banner.js"></script>
+
+</body>
+</html>

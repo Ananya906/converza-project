@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register - Converza</title>
+  <link rel="stylesheet" href="/css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <div class="center-card">
+    <div class="form-wrapper">
+      <!-- Left column: event images -->
+      <div class="left-images">
+        <img src="/images/image1.jpg" alt="Event 1">
+        <img src="/images/image2.jpeg" alt="Event 2">
+        <img src="/images/images3.jpeg" alt="Event 3">
+      </div>
+
+      <!-- Right column: glass card register form -->
+      <div class="glass-card">
+        <h1 class="title">Create Account</h1>
+        <p class="subtitle">Join Converza</p>
+
+        <% if (error) { %>
+          <div class="error"><%= error %></div>
+        <% } %>
+
+        <form action="/register" method="POST" class="form">
+          <div class="input-field">
+            <input type="text" name="name" placeholder="Full Name" required />
+            <i class="fa fa-user icon"></i>
+          </div>
+
+          <div class="input-field">
+            <input type="email" name="email" placeholder="Email" required />
+            <i class="fa fa-envelope icon"></i>
+          </div>
+
+          <div class="input-field">
+            <input type="password" name="password" placeholder="Password" required />
+            <i class="fa fa-lock icon"></i>
+          </div>
+
+          <button class="btn" type="submit">Register</button>
+        </form>
+
+        <p class="bottom">Already have an account? <a href="/login">Login</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

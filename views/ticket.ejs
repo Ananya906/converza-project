@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventster | Book Ticket</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/ticket.css">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="booking-wrapper">
+    <!-- Left Side -->
+    <div class="left-panel">
+      <h1>Book Your Event Tickets 🎟️</h1>
+      <p>
+        Experience amazing concerts, conferences, exhibitions, and more.<br>
+        Grab your spot before it's gone!
+      </p>
+    </div>
+
+    <!-- Right Side (Form) -->
+    <div class="form-panel">
+      <h2>Event Booking Form</h2>
+
+      <form id="ticketForm" action="/book-ticket" method="POST">
+        <!-- User Info -->
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" value="" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" value="" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="" required>
+
+        <!-- Event Info -->
+        <label for="event">Select Event</label>
+        <select id="event" name="event" required>
+          <option value="">-- Choose Event --</option>
+          <option value="Music Concert">Music Concert</option>
+          <option value="Tech Conference">Tech Conference</option>
+          <option value="Art Exhibition">Art Exhibition</option>
+          <option value="Sports Meet">Sports Meet</option>
+        </select>
+
+        <div class="inline-group">
+          <div class="half">
+            <label for="date">Event Date</label>
+            <input type="date" id="date" name="date" value="" required>
+          </div>
+          <div class="half">
+            <label for="tickets">Tickets</label>
+            <input type="number" id="tickets" name="tickets" min="1" max="10" value="1" required>
+          </div>
+        </div>
+
+        <label for="type">Ticket Type</label>
+        <select id="type" name="type" required>
+          <option value="Regular" data-price="500">Regular - ₹500</option>
+          <option value="VIP" data-price="1500">VIP - ₹1500</option>
+          <option value="Student" data-price="300">Student - ₹300</option>
+        </select>
+
+        <label for="payment">Payment Method</label>
+        <select id="payment" name="payment" required>
+          <option value="UPI">UPI</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="PayPal">PayPal</option>
+          <option value="Cash">Cash</option>
+        </select>
+
+        <p class="total" id="total">Total: ₹500</p>
+
+        <div class="captcha-box">
+          <span class="captcha" id="captchaCode"></span>
+          <input type="text" id="captchaInput" name="captcha" placeholder="Enter CAPTCHA" required>
+        </div>
+
+        <div class="terms">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">I agree to the Terms & Conditions</label>
+        </div>
+
+        <button type="submit">Book Now</button>
+        <p class="success-message" id="successMsg" style="display:none;">🎉 Booking successful!</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="/js/ticket.js"></script>
+</body>
+</html>

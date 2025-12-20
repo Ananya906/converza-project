@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title><%= siteName %> — About</title>
+    <link rel="stylesheet" href="/css/about.css" /> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand"><a href="/about">Converza Events</a></div>
+            <nav class="nav">
+                <a href="/about">About</a>
+                <a href="#features">Services</a>
+                <a href="#faqs">FAQs</a>
+                <a href="#reviews">Reviews</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-text">
+                    <h1>We make events unforgettable</h1>
+                    <p class="lead">Converza is a full-service event management company. We plan, manage, and execute corporate, private, and public events with flair.</p>
+                    <div class="hero-cta">
+                        <a class="btn primary" href="#features">Explore Our Services</a>
+                        <a class="btn ghost" href="#faqs">Have Questions?</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="/images/about1.jpg" alt="Group of people celebrating at a decorated event venue with warm lighting and festive decorations" />
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features container">
+            <h2>Innovative Services for Modern Events</h2>
+            <p class="sub">Tailored services to make your event successful and stress-free.</p>
+            <div class="grid">
+                <% features.forEach(function(f){ %>
+                    <div class="card feature-card">
+                        <h3><%= f.title %></h3>
+                        <p><%= f.desc %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+
+        <section id="reviews" class="reviews container">
+            <h2>Client Ratings & Reviews</h2>
+            <div class="rating-overview">
+                <div class="avg">
+                    <div class="avg-number"><%= avg %></div>
+                    <div class="avg-stars" data-avg="<%= avg %>"></div>
+                    <div class="count"><%= count %> reviews</div>
+                </div>
+                <div class="submit-form">
+                    <h3>Leave Your Rating</h3>
+                    <form id="ratingForm">
+                        <div class="stars" id="stars">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <input type="text" id="name" name="name" placeholder="Your name (optional)" />
+                        <textarea id="comment" name="comment" rows="3" placeholder="Your review (optional)"></textarea>
+                        <button type="submit" class="btn primary">Submit Review</button>
+                        <div id="ratingMessage" class="small muted"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="reviews-list" id="reviewsList">
+                <% if (reviews && reviews.length) { %>
+                    <% reviews.forEach(function(r){ %>
+                        <div class="review">
+                            <div class="rhead"><strong><%= r.name %></strong> — <span class="rtime"><%= new Date(r.createdAt).toLocaleString() %></span></div>
+                            <div class="rstars"><%= '★'.repeat(r.rating) %><%= '☆'.repeat(5-r.rating) %></div>
+                            <% if (r.comment) { %><p class="rcomment"><%= r.comment %></p><% } %>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="no-reviews">No reviews yet — be the first!</p>
+                <% } %>
+            </div>
+        </section>
+
+        <section id="faqs" class="faqs container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="accordion">
+                
+                <div class="faq-item">
+                    <button class="faq-q" data-index="0">What types of events do you specialize in?</button>
+                    <div class="faq-a"><p>We specialize in corporate conferences, product launches, weddings, and large public festivals. We have dedicated teams for both professional and private functions.</p></div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-q" data-index="1">Do you have a minimum budget requirement for events?</button>
+                    <div class="faq-a"><p>While we don't have a strict minimum, most of our full-service events start around **Rs.5,000** for basic packages. We recommend scheduling a free consultation so we can understand your needs and create a bespoke plan that maximizes your budget.</p></div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-q" data-index="2">How involved can I be in the planning process?</button>
+                    <div class="faq-a"><p>Your involvement is entirely up to you! We offer full-scale management, or we can work as consultants and support for specific aspects. We use a shared digital platform to keep you updated on all venue, vendor, and design decisions, ensuring your vision is executed perfectly.</p></div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-q" data-index="3">What is your cancellation and rescheduling policy?</button>
+                    <div class="faq-a"><p>Our policies are detailed in the service agreement, but generally, we offer **one complimentary date change** if requested 90 days or more before the event. Cancellations within 60 days will result in the forfeiture of the retainer fee, as we start securing vendors and materials well in advance.</p></div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-q" data-index="4">Can you handle virtual or hybrid events and technology needs?</button>
+                    <div class="faq-a"><p>Yes! We have a specialized 'Converza Tech' division dedicated to virtual and hybrid events. This includes platform selection, live streaming, interactive audience engagement tools, and technical support both pre-event and on-site/online.</p></div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-q" data-index="5">Do you offer sustainable or eco-friendly event options?</button>
+                    <div class="faq-a"><p>Absolutely. We prioritize sustainable planning, offering options for zero-waste catering, paperless communication, carbon-offset programs, and sourcing local, eco-certified vendors. We can integrate measurable sustainability goals into any event package.</p></div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-q" data-index="6">Do I have to use your preferred vendors?</button>
+                    <div class="faq-a"><p>We maintain a vetted list of preferred vendors for quality assurance and ease of coordination, but you are not obligated to use them. If you wish to use outside vendors, we simply require their contracts and insurance information in advance to ensure they meet our professional standards and site requirements.</p></div>
+                </div>
+                
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <%= new Date().getFullYear() %> Converza — Event Management</p>
+        </div>
+    </footer>
+
+    <script src="/js/about.js"></script>
+</body>
+</html>

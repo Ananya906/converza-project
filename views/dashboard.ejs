@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converza Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css?v=2025111401">
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-text">Converza</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active" data-view="overview"><i class="icon-dashboard"></i> Dashboard</a>
+            <a href="#" class="sidebar-link" data-view="bookings"><i class="icon-tickets"></i> Bookings</a>
+            <a href="#" class="sidebar-link" data-view="users"><i class="icon-users"></i> Users</a>
+        </nav>
+    </aside>
+
+    <div class="main-content">
+
+        <header class="header-bar">
+            <div class="event-info" id="view-title">Dashboard</div>
+            
+            <a href="/logout" class="logout-btn">
+                <i class="icon-logout"></i> Logout
+            </a>
+            </header>
+
+        <main class="main-padding">
+
+            <div id="overview-view" class="view-content active">
+
+                <div class="kpi-grid">
+
+                    <div class="kpi-card new-users-card">
+                        <div class="kpi-header-row">
+                            <div class="kpi-icon-wrapper"><i class="icon-users-glow"></i></div>
+                            <h3 class="kpi-title">Total Users</h3>
+                        </div>
+                        <p id="totalUsersBox" class="kpi-value"><%= metrics.totalUsers.toLocaleString() %></p>
+                    </div>
+
+                    <div class="kpi-card active-bookings-card">
+                        <div class="kpi-header-row">
+                            <div class="kpi-icon-wrapper"><i class="icon-tickets-glow"></i></div>
+                            <h3 class="kpi-title">Total Bookings</h3>
+                        </div>
+                        <p id="totalBookingsBox" class="kpi-value"><%= metrics.totalBookings.toLocaleString() %></p>
+                    </div>
+
+                </div>
+
+                <div class="two-panel-grid">
+
+                    <div class="panel-dark">
+                        <h2>Recent Transactions</h2>
+                        <table class="data-table recent-transactions-table">
+                            <thead>
+                                <tr>
+                                    <!-- <th>ID</th> -->
+                                    <th>Event</th>
+                                    <th>Ticket Type</th>
+                                    <th>Customer</th>
+                                    <th>Amount (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% metrics.recentBookings.forEach(booking => { %>
+                                    <tr>
+                                        <!-- <td>#<%= booking.id || booking._id %></td> -->
+                                        <td><%= booking.eventName %></td>
+                                        <td><%= booking.ticketType %></td>
+                                        <td><%= booking.fullName %></td>
+                                        <td>₹<%= parseFloat(booking.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
+                                    </tr>
+                                <% }); %>
+                                <% if (metrics.recentBookings.length === 0) { %>
+                                    <tr><td colspan="5" class="text-center">No recent transactions.</td></tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <button id="manageBookingsBtn" class="action-btn mt-4 w-full">View All Bookings</button>
+                    </div>
+
+                    <div class="panel-dark">
+                        <h2>Recent New Users</h2>
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Name</th><th>Email</th><th>Joined Date</th></tr>
+                            </thead>
+                            <tbody>
+                                <% metrics.recentUsers.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.name %></td>
+                                        <td><%= user.email %></td>
+                                        <td><%= user.joined %></td>
+                                    </tr>
+                                <% }); %>
+                                <% if (metrics.recentUsers.length === 0) { %>
+                                    <tr><td colspan="3" class="text-center">No users found.</td></tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <button id="manageUsersBtnOverview" class="action-btn mt-4 w-full">View All Users</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="bookings-view" class="view-content">
+
+                <div class="kpi-grid">
+
+                    <div class="kpi-card active-bookings-card">
+                        <div class="kpi-header-row">
+                            <div class="kpi-icon-wrapper"><i class="icon-tickets-glow"></i></div>
+                            <h3 class="kpi-title">Total Bookings</h3>
+                        </div>
+                        <p id="totalBookingsBoxBookings" class="kpi-value">
+                            <%= metrics.totalBookings.toLocaleString() %>
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="panel-dark full-width mt-4">
+                    <h2>All Bookings Details</h2>
+                    <table class="data-table full-bookings-table">
+                        <thead>
+                            <tr>
+                                <!-- <th>ID</th> -->
+                                <th>Event</th>
+                                <th>Customer Name</th>
+                                <th>Ticket Type</th>
+                                <th>Qty</th>
+                                <th>Total Paid (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% metrics.allBookings.forEach(booking => { %>
+                                <tr>
+                                    <!-- <td>#<%= booking._id %></td> -->
+                                    <td><%= booking.eventName %></td>
+                                    <td><%= booking.fullName %></td>
+                                    <td><%= booking.ticketType %></td>
+                                    <td><%= booking.ticketsQuantity %></td>
+                                    <td>₹<%= parseFloat(booking.totalAmount).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
+                                </tr>
+                            <% }); %>
+                            <% if (metrics.allBookings.length === 0) { %>
+                                <tr><td colspan="6" class="text-center">No bookings found.</td></tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div id="users-view" class="view-content">
+
+                <div class="panel-dark full-width mt-4">
+                    <h2>All Users</h2>
+                    <table class="data-table full-users-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Joined Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="full-users-tbody">
+                            <% metrics.allUsers.forEach(user => { %>
+                                <tr>
+                                    <td><%= user.name %></td>
+                                    <td><%= user.email %></td>
+                                    <td><%= user.joined %></td>
+                                </tr>
+                            <% }); %>
+                            <% if (metrics.allUsers.length === 0) { %>
+                                <tr><td colspan="3" class="text-center">No users found.</td></tr>
+                            <% } %>
+                            </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <footer>
+            &copy; Converza -2025
+        </footer>
+
+    </div>
+</div>
+
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

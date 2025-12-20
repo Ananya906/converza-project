@@ -1,0 +1,149 @@
+/* public/css/book-ticket.css - PURPLE THEME */
+
+body {
+    /* ADOPTED: Deep Violet Gradient from events-list.css */
+    background-image: linear-gradient(135deg, #1a0033 0%, #3d0066 50%, #660099 100%);
+    background-attachment: fixed; 
+    min-height: 100vh; 
+    color: #e0e0e0; 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.booking-container {
+    max-width: 550px;
+    margin: 40px auto;
+    padding: 30px;
+    /* ADOPTED: Translucent Dark Card Background */
+    background-color: rgba(255, 255, 255, 0.08); 
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.booking-container h2 {
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+/* Event Summary Section */
+.event-summary {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 5px solid #ff33cc; /* Primary Accent: Magenta */
+}
+
+.event-summary h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
+    color: #4dffcf; /* Secondary Accent: Aqua/Cyan */
+}
+
+.event-info-detail {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #b0b0b0;
+}
+
+/* Highlighted price per ticket in the summary */
+#current-price-display {
+    font-weight: bold;
+    color: #FFFFFF;
+    font-size: 1.1em;
+}
+
+
+/* Form Inputs */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #cccccc;
+    font-size: 0.9em;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background-color: #2c3e50; /* Dark input background */
+    color: #FFFFFF;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+/* Ensure select dropdown arrows are visible on dark background */
+.form-group select {
+    /* Fallback/Generic styles */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cccccc%22%20d%3D%22M287%20147.2L146.4%20287.8%205.8%20147.2%2049.2%20103.8%20146.4%20201%20243.6%20103.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 0.6em auto;
+    padding-right: 30px; 
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #ff33cc; /* Focus border: Magenta */
+    outline: none;
+}
+
+/* Total Price Display */
+.total-price-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-top: 25px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+}
+
+.total-price-summary p {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0;
+    color: #4dffcf; /* Aqua/Cyan label */
+}
+
+.total-price-summary .event-rate {
+    font-size: 1.6em;
+    color: #FFFFFF; 
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Submit Button */
+.btn-book-tickets {
+    width: 100%;
+    background-color: #ff33cc; /* Primary Accent: Magenta */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-book-tickets:hover {
+    background-color: #cc00a3;
+}

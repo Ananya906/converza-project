@@ -1,0 +1,284 @@
+{
+  "templates": [
+    {
+      "id": "tpl_1",
+      "name": "Neon Party",
+      "file": "tpl_1.svg",
+      "category": "dj",
+      "title": "Neon Party",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_2",
+      "name": "Modern Event",
+      "file": "tpl_2.svg",
+      "category": "dj",
+      "title": "Modern Event",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_3",
+      "name": "Special Music Party",
+      "file": "tpl_3.svg",
+      "category": "dj",
+      "title": "Special Music Party",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_4",
+      "name": "Disco Vibes",
+      "file": "tpl_4.svg",
+      "category": "dj",
+      "title": "Disco Vibes",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_5",
+      "name": "Birthday Confetti",
+      "file": "tpl_5.svg",
+      "category": "birthday",
+      "title": "Birthday Confetti",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_6",
+      "name": "Retro Birthday",
+      "file": "tpl_6.svg",
+      "category": "birthday",
+      "title": "Retro Birthday",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_7",
+      "name": "Kids Fun",
+      "file": "tpl_7.svg",
+      "category": "birthday",
+      "title": "Kids Fun",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_8",
+      "name": "Chic Birthday",
+      "file": "tpl_8.svg",
+      "category": "birthday",
+      "title": "Chic Birthday",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_9",
+      "name": "Elegant Wedding",
+      "file": "tpl_9.svg",
+      "category": "wedding",
+      "title": "Elegant Wedding",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_10",
+      "name": "Floral Wedding",
+      "file": "tpl_10.svg",
+      "category": "wedding",
+      "title": "Floral Wedding",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_11",
+      "name": "Gold Wedding",
+      "file": "tpl_11.svg",
+      "category": "wedding",
+      "title": "Gold Wedding",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_12",
+      "name": "Minimal Wedding",
+      "file": "tpl_12.svg",
+      "category": "wedding",
+      "title": "Minimal Wedding",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_13",
+      "name": "Corporate Clean",
+      "file": "tpl_13.svg",
+      "category": "corporate",
+      "title": "Corporate Clean",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_14",
+      "name": "Product Launch",
+      "file": "tpl_14.svg",
+      "category": "corporate",
+      "title": "Product Launch",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_15",
+      "name": "Business Summit",
+      "file": "tpl_15.svg",
+      "category": "corporate",
+      "title": "Business Summit",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_16",
+      "name": "Seminar",
+      "file": "tpl_16.svg",
+      "category": "corporate",
+      "title": "Seminar",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_17",
+      "name": "Rock Concert",
+      "file": "tpl_17.svg",
+      "category": "concert",
+      "title": "Rock Concert",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_18",
+      "name": "Indie Concert",
+      "file": "tpl_18.svg",
+      "category": "concert",
+      "title": "Indie Concert",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_19",
+      "name": "EDM Rave",
+      "file": "tpl_19.svg",
+      "category": "concert",
+      "title": "EDM Rave",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_20",
+      "name": "Acoustic Night",
+      "file": "tpl_20.svg",
+      "category": "concert",
+      "title": "Acoustic Night",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_21",
+      "name": "Summer Fest",
+      "file": "tpl_21.svg",
+      "category": "festival",
+      "title": "Summer Fest",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_22",
+      "name": "Food Fest",
+      "file": "tpl_22.svg",
+      "category": "festival",
+      "title": "Food Fest",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_23",
+      "name": "Cultural Fest",
+      "file": "tpl_23.svg",
+      "category": "festival",
+      "title": "Cultural Fest",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_24",
+      "name": "Art Exhibition",
+      "file": "tpl_24.svg",
+      "category": "festival",
+      "title": "Art Exhibition",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_25",
+      "name": "College Fest",
+      "file": "tpl_25.svg",
+      "category": "college",
+      "title": "College Fest",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_26",
+      "name": "Farewell Bash",
+      "file": "tpl_26.svg",
+      "category": "college",
+      "title": "Farewell Bash",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_27",
+      "name": "Alumni Meet",
+      "file": "tpl_27.svg",
+      "category": "college",
+      "title": "Alumni Meet",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    },
+    {
+      "id": "tpl_28",
+      "name": "Workshop Meetup",
+      "file": "tpl_28.svg",
+      "category": "workshop",
+      "title": "Workshop Meetup",
+      "tag": "",
+      "time": "",
+      "venue": ""
+    }
+  ]
+}

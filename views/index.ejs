@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Converza -Event Management Portal</title>
+    <meta name="title" content="Converza | Smart Event Management Portal">
+    <meta name="description" content="Converza is an interactive event management portal that lets organizers create, manage, and promote events.">
+
+
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Work+Sans:wght@600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .dropdown-content:hover button {
+            background-color: #f44336; /* Highlight Logout button on hover */
+        }
+        .show-dropdown {
+            display: block !important;
+        }
+        /* Ensure the dropdown button is styled correctly */
+        .dropdown-content button {
+            text-decoration: none;
+            display: block;
+        }
+    </style>
+    <link rel="preload" as="image" href="">
+    </head>
+
+<body id="top">
+
+    <header class="header active" data-header>
+        <div class="container">
+
+            <a href="#" class="logo">
+    <span class="logo-text">Converza</span>
+</a>
+
+
+            <nav class="navbar" data-navbar>
+                <ul class="navbar-list">
+
+                    <li class="navbar-item">
+                        <a href="/index" class="navbar-link" data-nav-link>home</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="/about" class="navbar-link" data-nav-link>About Us</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="/event" class="navbar-link" data-nav-link>Events</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="/contact" class="navbar-link" data-nav-link>contact Us</a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <% if (isAuthenticated) { %>
+                <div class="header-profile-dropdown" style="position: relative;">
+                    <a href="#" class="btn" data-btn id="profile-btn" 
+                       onclick="event.preventDefault(); document.getElementById('logout-form-container').classList.toggle('show-dropdown');"
+                       style="display: flex; align-items: center; gap: 5px; background-color: #007bff; color: white; padding: 10px 15px; border-radius: 5px;">
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        Hello, <%= user.name.split(' ')[0] %> </a>
+                    
+                    <div id="logout-form-container" class="dropdown-content" 
+                         style="position: absolute; top: 100%; right: 0; background-color: #333; min-width: 120px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); z-index: 10; display: none; margin-top: 5px; border-radius: 5px;">
+                        
+                       <form action="/logout" method="GET" style="padding: 0; margin: 0;">
+                            <button type="submit" style="background: none; border: none; color: white; padding: 12px 16px; text-align: left; width: 100%; cursor: pointer; font-size: 14px; background-color: #555; transition: background-color 0.2s; border-radius: 0 0 5px 5px;">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            <% } else { %>
+                <a href="/login" class="btn" data-btn>Login</a>
+            <% } %>
+            <button class="nav-toggle-btn" aria-label="toggle menu" data-nav-toggler>
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </button>
+
+        </div>
+    </header>
+
+    <main>
+        <article>
+
+            <div class="hero has-before" id="home">
+                <div class="container">
+
+                    <h3 class="section-subtitle">Experience, Explore, Enjoy – Events Made Easy</h3>
+
+                    <h4 class=" title hero-title">Discover events that match your interests <br> Converza makes it easy to find exactly what you’re looking for — from thrilling competitions to fun-filled workshops</h4>
+
+                    <a href="/events-list" class="btn" data-btn>Book Events</a>
+
+                    <div class="hero-banner">
+                        <img src="" >
+
+                        </div>
+
+                </div>
+            </div>
+
+            <section class="section upcoming" aria-labelledby="upcoming-label" id="tournament">
+                <div class="container">
+
+                    <h2 class="h2 section-title" data-reveal="bottom">
+                        Discover Events <br> By <span class="span">Category</span>
+                    </h2>
+
+                    <p class="section-text" data-reveal="bottom">
+                        Whether you’re looking to learn, network, celebrate, or have fun, our event categories make it easy to find the right event for you.
+                    </p>
+
+                    <ol class="upcoming-list">
+
+                        <li class="upcoming-item">
+
+                            <div class="upcoming-card left has-before" data-reveal="left">
+
+                                <img src="./images/team-logo-1.webp" width="86" height="81" loading="lazy"
+                                    alt="Purple Death Cadets" class="card-banner">
+
+                                <h3 class="h3 card-title">Cultural Events</h3>
+
+                                </div>
+
+                            <div class="upcoming-time" data-reveal="bottom">
+                                <div class="social-wrapper">
+                                    </div>
+                            </div>
+
+                            <div class="upcoming-card right has-before" data-reveal="right">
+
+                                <img src="./images/team-logo-2.jpg" width="86" height="81" loading="lazy"
+                                    alt="Trigger Brain Squad" class="card-banner">
+
+                                <h3 class="h3 card-title">Corporate Events</h3>
+
+                                </div>
+
+                        </li>
+
+                        <li class="upcoming-item">
+
+                            <div class="upcoming-card left has-before" data-reveal="left">
+
+                                <img src="./images/team-logo-3.jpg" width="86" height="81" loading="lazy"
+                                    alt="The Black Hat Hackers" class="card-banner">
+
+                                <h3 class="h3 card-title">University Events</h3>
+
+                                </div>
+
+                            <div class="upcoming-time" data-reveal="bottom">
+                                <div class="social-wrapper">
+                                    </div>
+                            </div>
+
+                            <div class="upcoming-card right has-before" data-reveal="right">
+
+                                <img src="./images/team-logo-4.jpg" width="86" height="81" loading="lazy"
+                                    alt="Your Worst Nightmare" class="card-banner">
+
+                                <h3 class="h3 card-title">Dj Nights</h3>
+
+                                </div>
+
+                        </li>
+
+                        <li class="upcoming-item">
+
+                            <div class="upcoming-card left has-before" data-reveal="left">
+
+                                <img src="./images/team-logo-5.jpg" width="86" height="81" loading="lazy"
+                                    alt="Witches And Quizards" class="card-banner">
+
+                                <h3 class="h3 card-title">Social Gathering</h3>
+
+                                </div>
+
+                            <div class="upcoming-time" data-reveal="bottom">
+                                <div class="social-wrapper">
+                                    </div>
+                            </div>
+
+                            <div class="upcoming-card right has-before" data-reveal="right">
+
+                                <img src="./images/team-logo-6.jpg" width="86" height="81" loading="lazy"
+                                    alt="Resting Bitch Faces" class="card-banner">
+
+                                <h3 class="h3 card-title">Private Parties</h3>
+
+                                </div>
+
+                        </li>
+
+                    </ol>
+
+                </div>
+            </section>
+
+            <section class="section news" aria-label="our latest news" id="news">
+                <div class="container">
+
+                    <p class="section-subtitle" data-reveal="bottom">What Our Attendees Say</p>
+
+                    <h2 class="h2 section-title" data-reveal="bottom">
+                        Be Part of Our  <span class="span">Growing Community</span>
+                    </h2>
+                    <br>
+                    <br>
+
+
+                    <ul class="news-list">
+
+                        <li data-reveal="bottom">
+                            <div class="news-card">
+
+                                <figure class="card-banner img-holder" style="--width: 600; --height: 400;">
+                                    <img src="./images/news-1.jpg" width="600" height="400" loading="lazy"
+                                        alt="Innovative Business All Over The World." class="img-cover">
+                                </figure>
+
+                                <div class="card-content">
+
+                                    <a href="#" class="card-tag">⭐⭐⭐⭐⭐</a>
+
+                                    <ul class="card-meta-list">
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+
+                                            <time class="card-meta-text" datetime="2022-01-01">Jan 01 2025</time>
+                                        </li>
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+
+                                            <p class="card-meta-text">Rohan K., Student</p>
+                                        </li>
+
+                                    </ul>
+
+                                    <h3 class="h3">
+                                        <a href="#" class="card-title"></a>
+                                    </h3>
+
+                                    <p class="card-text">
+                                        Converza made it super easy to find university events and connect with friends.
+                                    </p>
+
+                                    <a href="#" class="link has-before">Read More</a>
+
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <li data-reveal="bottom">
+                            <div class="news-card">
+
+                                <figure class="card-banner img-holder" style="--width: 600; --height: 400;">
+                                    <img src="./images/news-2.webp" width="600" height="400" loading="lazy"
+                                        alt="How To Start Initiating An Startup In Few Days." class="img-cover">
+                                </figure>
+
+                                <div class="card-content">
+
+                                    <a href="#" class="card-tag">⭐⭐⭐⭐</a>
+
+                                    <ul class="card-meta-list">
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+
+                                            <time class="card-meta-text" datetime="2022-01-01">Jan 01 2025</time>
+                                        </li>
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+
+                                            <p class="card-meta-text">Sameer T., Guest</p>
+                                        </li>
+
+                                    </ul>
+
+                                    <h3 class="h3">
+                                        <a href="#" class="card-title"></a>
+                                    </h3>
+
+                                    <p class="card-text">
+                                        Amazing ideas for private parties. Everyone had a blast,I can’t wait for the next one!
+                                    </p>
+
+                                    <a href="#" class="link has-before">Read More</a>
+
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <li data-reveal="bottom">
+                            <div class="news-card">
+
+                                <figure class="card-banner img-holder" style="--width: 600; --height: 400;">
+                                    <img src="./images/news-3.webp" width="600" height="400" loading="lazy"
+                                        alt="Financial Experts Support Help You To Find Out." class="img-cover">
+                                </figure>
+
+                                <div class="card-content">
+
+                                    <a href="#" class="card-tag">⭐⭐⭐⭐</a>
+
+                                    <ul class="card-meta-list">
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+
+                                            <time class="card-meta-text" datetime="2022-01-01">Jan 01 2025</time>
+                                        </li>
+
+                                        <li class="card-meta-item">
+                                            <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+
+                                            <p class="card-meta-text">Rishi M.</p>
+                                        </li>
+
+                                    </ul>
+
+                                    <h3 class="h3">
+                                        <a href="#" class="card-title"></a>
+                                    </h3>
+
+                                    <p class="card-text">
+                                        Converza helped me discover the best club events. I can’t wait for the next one!
+                                    </p>
+
+                                    <a href="#" class="link has-before">Read More</a>
+
+                                </div>
+
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </section>
+
+        </article>
+    </main>
+
+
+
+    <footer class="footer">
+
+        <div class="section footer-top">
+            <div class="container">
+
+                <div class="footer-brand">
+
+                    <a href="#" class="logo">
+                        <h2>Converza</h2>
+                    </a>
+
+                    <p class="footer-text">
+                        Discover amazing events near you — from parties and concerts to workshops and conferences. Converza brings every experience closer to you.
+                    </p>
+
+                    <ul class="social-list">
+
+                        <li>
+                            <a href="#" class="social-link">
+                                <ion-icon name="logo-facebook"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="social-link">
+                                <ion-icon name="logo-twitter"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="social-link">
+                                <ion-icon name="logo-instagram"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="social-link">
+                                <ion-icon name="logo-youtube"></ion-icon>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="footer-list">
+
+                    <p class="title footer-list-title has-after">Usefull Links</p>
+
+                    <ul>
+
+                        <li>
+                            <a href="#" class="footer-link">Upcoming Events</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="footer-link">Help Center</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="footer-link">Privacy and Policy</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="footer-link">Terms of Use</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="footer-link">Contact Us</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="footer-list">
+
+                    
+
+                    <div class="contact-item">
+                        <span class="span">Location:</span>
+
+                        <address class="contact-link">
+                            1234, Ambala City, Haryana,134003
+                        </address>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="span">Join Us:</span>
+
+                        <a href="organizers@gmail.com" class="contact-link">Info@unigine.com</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="span">Phone:</span>
+
+                        <a href="tel:+12345678910" class="contact-link">+91 9466234568</a>
+                    </div>
+
+                </div>
+
+                <div class="footer-list">
+
+                    <p class="title footer-list-title has-after">Contact Us</p>
+
+                    <form action="./index.html" method="get" class="footer-form">
+                        <input type="email" name="email_address" required placeholder="Your Email" autocomplete="off"
+                            class="input-field">
+
+                        <button type="submit" class="btn" data-btn>Here!!</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+
+                <p class="copyright">
+                    &copy; 2025 codewithsadee All Rights Reserved.
+                </p>
+
+            </div>
+        </div>
+
+    </footer>
+
+    <a href="#top" class="back-top-btn" aria-label="back to top" data-back-top-btn>
+        <ion-icon name="arrow-up-outline" aria-hidden="true">⬆</ion-icon>
+    </a>
+
+    <div class="cursor" data-cursor></div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script src="./js/script.js"></script>
+
+</body>
+
+</html>

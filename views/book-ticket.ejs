@@ -1,0 +1,113 @@
+<link rel="stylesheet" href="/css/book-ticket.css">
+
+<div class="booking-container">
+    <h2>Complete Your Booking</h2>
+    
+    <div class="event-summary">
+        <h3 id="form-event-name"><%= event.name %></h3>
+        <p class="event-info-detail">Time: <%= event.startTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) %></p>
+        <p class="event-info-detail">Date: <%= event.startTime.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %></p>
+        <p class="event-info-detail">Venue: <%= event.location %></p>
+        <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 10px 0;">
+        <p class="event-info-detail">Price per Ticket: <span id="current-price-display"></span></p>
+    </div>
+    
+    <form id="ticket-booking-form" method="POST" action="/api/bookings">
+        <input type="hidden" name="eventId" value="<%= event._id %>">
+
+        <input type="hidden" id="hiddenPricePerTicket" name="pricePerTicket">
+        <input type="hidden" id="hiddenTotalAmount" name="totalAmount">
+
+        <div class="form-group">
+            <label for="ticketType">Ticket Type / Category</label>
+            <select id="ticketType" name="ticketType" required>
+                <% event.ticketTypes.forEach((type, index) => { %>
+                    <option 
+                        value="<%= type.name %>" 
+                        data-price="<%= type.price %>" 
+                        <%= index === 0 ? 'selected' : '' %>
+                    >
+                        <%= type.name %> (Rs. <%= type.price.toLocaleString('en-IN') %>)
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="ticketsQuantity">Number of Tickets</label>
+            <input type="number" id="ticketsQuantity" name="ticketsQuantity" value="1" min="1" max="10" required>
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="contactNo">Contact Number</label>
+            <input type="tel" id="contactNo" name="contactNo" pattern="[0-9]{10}" title="Ten digits number" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Your City/Location</label>
+            <input type="text" id="location" name="location" required>
+        </div>
+
+        <div class="form-group">
+            <label for="paymentMethod">Choose Payment Method</label>
+            <select id="paymentMethod" name="paymentMethod" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="upi">UPI/Google Pay</option>
+                <option value="card">Credit/Debit Card</option>
+                <option value="netbanking">Net Banking</option>
+            </select>
+        </div>
+        
+        <div class="total-price-summary">
+            <p>Total Price to Pay:</p>
+            <span id="totalPrice" class="event-rate"></span>
+        </div>
+        
+        <button type="submit" class="btn-book-tickets">Proceed to Payment</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ticketTypeSelect = document.getElementById('ticketType');
+        const ticketInput = document.getElementById('ticketsQuantity');
+        const totalPriceSpan = document.getElementById('totalPrice');
+        const currentPriceDisplay = document.getElementById('current-price-display');
+        
+        // Hidden inputs that send the calculated numerical data to the server
+        const hiddenPricePerTicket = document.getElementById('hiddenPricePerTicket');
+        const hiddenTotalAmount = document.getElementById('hiddenTotalAmount');
+
+        const formatPrice = (price) => `Rs. ${price.toLocaleString('en-IN')}`;
+
+        // Function to handle dynamic price calculation
+        function updatePrices() {
+            const selectedOption = ticketTypeSelect.options[ticketTypeSelect.selectedIndex];
+            // Read the price from the data-price attribute set by EJS
+            const pricePerTicket = parseInt(selectedOption.dataset.price, 10) || 0;
+            const numTickets = parseInt(ticketInput.value, 10) || 0;
+            const total = numTickets * pricePerTicket;
+
+            // 1. Update visible displays
+            currentPriceDisplay.textContent = formatPrice(pricePerTicket);
+            totalPriceSpan.textContent = formatPrice(total);
+            
+            // 2. Update HIDDEN inputs for MongoDB storage
+            // This is crucial: the server reads these values from req.body
+            hiddenPricePerTicket.value = pricePerTicket;
+            hiddenTotalAmount.value = total;
+        }
+
+        // Event listeners for changes
+        ticketTypeSelect.addEventListener('change', updatePrices);
+        ticketInput.addEventListener('input', updatePrices);
+
+        // Initial run to set prices on page load
+        updatePrices();
+    });
+</script>

@@ -1,0 +1,192 @@
+:root {
+    --p1: #6b21a8;
+    --p2: #ec4899;
+    --accent: #ff77a9;
+    --muted: #fcf8f8;
+    --card: rgba(255, 255, 255, 0.03);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Inter, system-ui, Segoe UI, Roboto, Arial;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, var(--p1), #20003a);
+    color: var(--muted);
+    min-height: 100vh;
+}
+
+/* ===================== TOP BAR ===================== */
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    align-items: center;
+}
+
+.brand {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 20px;
+}
+
+/* ===================== MAIN WRAPPER ===================== */
+
+.wrap {
+    display: grid;
+    grid-template-columns: 300px 1fr 380px;
+    gap: 16px;
+    padding: 16px;
+}
+
+.card {
+    background: var(--card);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ===================== INPUT CONTROLS ===================== */
+
+.panel label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+input,
+select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--muted);
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+button {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 0;
+    background: linear-gradient(90deg, var(--p2), var(--p1));
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+/* ===================== TEMPLATES GRID ===================== */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    max-height: 720px;
+    overflow: auto;
+}
+
+.tpl {
+    height: 140px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.tpl img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===================== PREVIEW ===================== */
+
+.previewArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 520px;
+    padding: 8px;
+}
+
+.banner {
+    width: 380px;
+    height: 570px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    padding: 18px;
+    background: #111;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Landscape banner */
+.banner.land {
+    width: 740px;
+    height: 420px;
+    flex-direction: row;
+    padding: 24px;
+}
+
+.qr {
+    width: 140px;
+    height: 140px;
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===================== FOOTER ===================== */
+
+.footer {
+    padding: 12px;
+    text-align: center;
+    color: var(--muted);
+    opacity: 0.9;
+}
+
+/* ===================== DROPDOWN COLORS ===================== */
+
+select {
+    background-color: #6b21a8;
+    color: white !important;
+}
+
+select option {
+    color: rgb(226, 223, 223);
+}
+
+select option:checked {
+    background-color: black !important;
+    color: white !important;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 980px) {
+    .wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .banner {
+        width: 100%;
+        height: 420px;
+    }
+}

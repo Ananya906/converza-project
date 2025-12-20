@@ -1,0 +1,65 @@
+/* public/css/success.css - PURPLE THEME */
+
+body {
+    /* ADOPTED: Deep Violet Gradient from events-list.css */
+    background-image: linear-gradient(135deg, #1a0033 0%, #3d0066 50%, #660099 100%);
+    background-attachment: fixed; 
+    min-height: 100vh; 
+    color: #e0e0e0; 
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.success-message {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 30px;
+    /* ADOPTED: Translucent Dark Card Background */
+    background-color: rgba(255, 255, 255, 0.08); 
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.success-message h1 {
+    color: #4dffcf; /* Secondary Accent: Aqua/Cyan */
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.success-message p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.booking-detail {
+    text-align: left;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+.booking-detail p {
+    margin: 8px 0;
+}
+.booking-detail strong {
+    color: #ff33cc; /* Primary Accent: Magenta */
+}
+
+/* Home Button Styling */
+.success-message a {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 20px;
+    color: white !important;
+    background-color: #ff33cc; /* Primary Accent: Magenta */
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.success-message a:hover {
+    background-color: #cc00a3;
+}

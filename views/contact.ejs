@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Converza</title>
+    <link rel="stylesheet" href="/css/contact.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <section class="contact-section">
+        
+        <div class="text-side">
+            <h1>LET'S CONNECT</h1>
+            <p>Reach out anytime — your ideas and feedback matter to us.</p>
+        </div>
+        
+        <div class="form-side">
+            <div class="form-container">
+                <form id="emailForm">
+                    <input type="text" id="name" name="name" placeholder="Your Full Name" required>
+                    <input type="email" id="email" name="email" placeholder="Your Email Address" required>
+                    <textarea id="message" name="message" placeholder="Share your ideas here..." required></textarea>
+                    <button type="submit" id="submitBtn">Send Message</button>
+                </form>
+                <!-- Success message container for Katalon assertion -->
+                <p id="successMsg" style="display:none;"></p>
+            </div>
+        </div>
+    </section>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span id="popup-icon"></span>
+            <span id="popup-text"></span>
+        </div>
+    </div>
+
+    <script src="/js/contact.js"></script>
+    <script>
+        // Example: update successMsg when form is submitted
+        const form = document.getElementById('emailForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // your existing logic to send data to server
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('successMsg').textContent = "Message sent successfully";
+        });
+    </script>
+</body>
+</html>
