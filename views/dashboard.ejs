@@ -53,6 +53,19 @@
                         <p id="totalBookingsBox" class="kpi-value"><%= metrics.totalBookings.toLocaleString() %></p>
                     </div>
 
+
+
+
+                    <div class="kpi-card revenue-card">
+    <div class="kpi-header-row">
+        <div class="kpi-icon-wrapper"><i class="icon-money-glow">💰</i></div>
+        <h3 class="kpi-title">Total Revenue</h3>
+    </div>
+    <p class="kpi-value">
+        ₹ <%= metrics.totalRevenue.toLocaleString('en-IN') %>
+    </p>
+</div>
+
                 </div>
 
                 <div class="two-panel-grid">
@@ -139,6 +152,7 @@
                                 <th>Ticket Type</th>
                                 <th>Qty</th>
                                 <th>Total Paid (₹)</th>
+                                
                             </tr>
                         </thead>
                         <tbody>

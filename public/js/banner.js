@@ -11,23 +11,28 @@ const timeIn = document.getElementById('time');
 const venue = document.getElementById('venue');
 const contact = document.getElementById('contact');
 const orientation = document.getElementById('orientation');
+
 const aiBtn = document.getElementById('aiBtn');
 const previewBtn = document.getElementById('previewBtn');
 const createBtn = document.getElementById('createBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+
 const bgUpload = document.getElementById('bgUpload');
 const logoUpload = document.getElementById('logoUpload');
+
 const previewArea = document.getElementById('previewArea');
-const generateBtn = document.getElementById('generateBtn'); // Optional QR preview button
+const generateBtn = document.getElementById('generateBtn');
 const qrPreview = document.getElementById('qrPreview');
 
 let templates = [];
 let uploadedBg = null;
 let uploadedLogo = null;
 let selectedTemplate = null;
-let latestQR = ""; // store QR from backend
+let latestQR = "";
 
-// Load templates
+// ----------------------
+// LOAD TEMPLATES
+// ----------------------
 fetch('/templates/templates.json')
   .then(res => res.json())
   .then(data => {
@@ -35,7 +40,7 @@ fetch('/templates/templates.json')
     populateTemplates();
   });
 
-// Populate template grid
+// ----------------------
 function populateTemplates() {
   grid.innerHTML = "";
   filter.innerHTML = `<option value="">All</option>`;
@@ -48,7 +53,7 @@ function populateTemplates() {
     filter.appendChild(opt);
   });
 
-  templates.forEach(t => addTemplate(t));
+  templates.forEach(addTemplate);
   selectTemplate(templates[0]);
 }
 
@@ -71,16 +76,21 @@ function selectTemplate(t) {
   renderPreview();
 }
 
-// Filter templates
+// ----------------------
+// FILTER
+// ----------------------
 filter.addEventListener("change", () => {
   const sel = filter.value;
   grid.innerHTML = "";
+
   templates
     .filter(t => !sel || t.category === sel)
     .forEach(addTemplate);
 });
 
-// Upload Background
+// ----------------------
+// UPLOADS
+// ----------------------
 bgUpload.addEventListener("change", e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -93,7 +103,6 @@ bgUpload.addEventListener("change", e => {
   reader.readAsDataURL(file);
 });
 
-// Upload Logo
 logoUpload.addEventListener("change", e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -106,7 +115,9 @@ logoUpload.addEventListener("change", e => {
   reader.readAsDataURL(file);
 });
 
-// AI Autofill
+// ----------------------
+// AI AUTOFILL
+// ----------------------
 aiBtn.addEventListener("click", () => {
   if (!title.value) title.value = `${category.value} Event`;
   if (!tag.value) tag.value = "Don't miss out!";
@@ -115,7 +126,9 @@ aiBtn.addEventListener("click", () => {
   renderPreview();
 });
 
-// Preview Button
+// ----------------------
+// PREVIEW
+// ----------------------
 previewBtn.addEventListener("click", () => renderPreview(latestQR));
 
 // ----------------------
@@ -126,14 +139,18 @@ function renderPreview(qrBase64 = "") {
   if (!selectedTemplate) return;
 
   const banner = document.createElement("div");
-  banner.className = "banner " + (orientation.value === "landscape" ? "land" : "");
+  banner.className = "banner";
   banner.style.position = "relative";
 
   // Background
-  banner.style.background = `url(/templates/${selectedTemplate.file}) center/cover no-repeat`;
-  if (uploadedBg) banner.style.background = `url(${uploadedBg}) center/cover no-repeat`;
+  banner.style.background =
+    `url(/templates/${selectedTemplate.file}) center/cover no-repeat`;
 
-  // Text
+  if (uploadedBg) {
+    banner.style.background = `url(${uploadedBg}) center/cover no-repeat`;
+  }
+
+  // TEXT
   const left = document.createElement("div");
   left.className = "leftText";
   left.innerHTML = `
@@ -175,7 +192,7 @@ function renderPreview(qrBase64 = "") {
 }
 
 // ----------------------
-// CREATE EVENT + GET QR
+// CREATE EVENT
 // ----------------------
 createBtn.addEventListener("click", async () => {
   const response = await fetch("/create-event", {
@@ -201,13 +218,14 @@ createBtn.addEventListener("click", async () => {
 });
 
 // ----------------------
-// DOWNLOAD PNG
+// DOWNLOAD
 // ----------------------
 downloadBtn.addEventListener("click", async () => {
   const banner = getBannerElement();
   if (!banner) return alert("Preview first!");
 
   const canvas = await html2canvas(banner, { scale: 2 });
+
   const a = document.createElement("a");
   a.download = `${title.value || "event"}-banner.png`;
   a.href = canvas.toDataURL();
@@ -215,31 +233,61 @@ downloadBtn.addEventListener("click", async () => {
 });
 
 // ----------------------
-// OPTIONAL: Generate QR Preview Only
+// AI GENERATION (FIXED)
 // ----------------------
-if (generateBtn && qrPreview) {
-  generateBtn.addEventListener("click", async () => {
-    const sendData = {
-      title: title.value,
-      tag: tag.value,
-      time: timeIn.value,
-      venue: venue.value,
-      contact: contact.value
-    };
+document.getElementById("generateAI").addEventListener("click", async () => {
+  try {
+    const prompt = document.getElementById("aiPrompt").value;
 
-    const res = await fetch("/create-event", {
+    if (!prompt || prompt.trim() === "") {
+      alert("Please enter AI prompt");
+      return;
+    }
+
+    const res = await fetch("/ai-banner/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sendData)
+      body: JSON.stringify({ prompt })
     });
 
     const data = await res.json();
 
-    if (data.ok) {
-      qrPreview.src = data.qr;
-      qrPreview.style.display = "block";
-    } else {
-      alert("QR failed");
+    if (!res.ok) {
+      throw new Error(data.error || "AI failed");
     }
-  });
-}
+
+    // clear preview
+    previewArea.innerHTML = "";
+
+    // create banner container
+    const banner = document.createElement("div");
+    banner.className = "banner";
+    banner.style.position = "relative";
+
+    // image
+    const img = new Image();
+    img.style.width = "100%";
+    img.style.borderRadius = "10px";
+
+    img.onload = () => {
+      console.log("AI image loaded successfully");
+    };
+
+    img.onerror = () => {
+      console.log("Image failed, retrying...");
+      img.src = data.imageUrl + "?t=" + Date.now();
+    };
+
+    img.src = data.imageUrl;
+
+    // append ONCE
+    banner.appendChild(img);
+
+    // IMPORTANT FIX (YOU WERE MISSING THIS)
+    previewArea.appendChild(banner);
+
+  } catch (err) {
+    console.log("ERROR:", err);
+    alert(err.message);
+  }
+});

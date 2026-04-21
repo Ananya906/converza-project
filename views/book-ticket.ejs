@@ -5,8 +5,20 @@
     
     <div class="event-summary">
         <h3 id="form-event-name"><%= event.name %></h3>
-        <p class="event-info-detail">Time: <%= event.startTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) %></p>
-        <p class="event-info-detail">Date: <%= event.startTime.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %></p>
+        <p class="event-info-detail">
+Time: <%= event.startTime.toLocaleTimeString('en-IN', { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+}) %>
+</p>
+        <p class="event-info-detail">
+Date: <%= event.startTime.toLocaleDateString('en-IN', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+}) %>
+</p>
         <p class="event-info-detail">Venue: <%= event.location %></p>
         <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 10px 0;">
         <p class="event-info-detail">Price per Ticket: <span id="current-price-display"></span></p>

@@ -2,6 +2,7 @@
 require("dotenv").config();
 
 // ----------------- Imports -----------------
+const crypto = require("crypto");
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -12,13 +13,16 @@ const cookieParser = require("cookie-parser");
 const nodemailer = require("nodemailer");
 const QRCode = require("qrcode");
 const Banner = require("./models/modelbanner");
-const redisClient = require("./redisClient");
+const sendTicketEmail = require("./utils/sendEmail");
+
+// const redisClient = require("./redisClient");
 
 
 // ----------------- Models -----------------
 const User = require("./models/User");
 const Booking = require("./models/Booking");
-const mockEvents = require("./models/mockEvents");
+//const mockEvents = require("./models/mockEvents");
+const Event = require("./models/Event");
 
 
 
@@ -125,6 +129,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use("/ai-banner", require("./routes/aiBanner"));
 
 // ----------------- Helper Functions -----------------
 function createTokenAndSetCookie(res, payload) {
@@ -173,85 +178,98 @@ const getDashboardMetrics = async () => {
         Review.countDocuments(),
     ]);
 
-    // --- MODIFIED QUERIES START HERE ---
     const [recentUsersDB, allUsersDB, recentBookingsDB, allBookings] = await Promise.all([
-        // 1. Query for RECENT USERS (Dashboard Overview - LIMIT 5)
+        // Recent Users (Top 5)
         User.find(NON_ADMIN_FILTER)
             .sort({ createdAt: -1 })
-            .limit(5) // <-- ADDED LIMIT FOR DASHBOARD OVERVIEW
+            .limit(5)
             .select("name email role createdAt")
             .lean(),
 
-        // 2. Query for ALL USERS (Users Tab - NO LIMIT)
+        // All Users
         User.find(NON_ADMIN_FILTER)
             .sort({ createdAt: -1 })
             .select("name email role createdAt")
-            .lean(), // <-- ADDED QUERY FOR ALL USERS
+            .lean(),
 
-        // 3. Query for Recent Bookings (already limited to 5)
+        // Recent Bookings (Top 5)
         Booking.find()
             .sort({ _id: -1 })
             .limit(5)
             .select("_id eventName fullName totalAmount ticketType status")
             .lean(),
 
-        // 4. Query for All Bookings
+        // All Bookings
         Booking.find()
             .sort({ createdAt: -1 })
             .select("eventName fullName ticketType ticketsQuantity totalAmount status createdAt")
             .lean(),
     ]);
-    // --- MODIFIED QUERIES END HERE ---
 
+    // 🔥 TOTAL REVENUE CALCULATION
+    const totalRevenue = allBookings.reduce((sum, booking) => {
+        return sum + Number(booking.totalAmount || 0);
+    }, 0);
 
+    // Format recent bookings
     const recentBookings = recentBookingsDB.map((b) => ({
         id: `#${String(b._id).slice(-5)}`,
         eventName: b.eventName,
         fullName: b.fullName,
         ticketType: b.ticketType,
-        amount: b.totalAmount.toFixed(2),
+        amount: Number(b.totalAmount || 0).toFixed(2),
         status: b.status || "Pending",
     }));
 
     return {
         totalUsers: totalUsers,
         totalBookings: totalBookings,
+        totalRevenue: totalRevenue, // ✅ NEW
+
         totalContactMessages: contactCount,
         totalReviews: reviewCount,
+
         activeUsers: totalUsers,
         newUsers: 0,
         suspendedUsers: 0,
         bookingTypePercentages: [0, 0, 0],
+
         allBookings: allBookings.map((b) => ({
             eventName: b.eventName,
             fullName: b.fullName,
             ticketType: b.ticketType,
             ticketsQuantity: b.ticketsQuantity,
-            totalAmount: b.totalAmount.toFixed(2),
+            totalAmount: Number(b.totalAmount || 0).toFixed(2),
             status: b.status || "Pending",
             bookingDate: b.createdAt
-                ? b.createdAt.toLocaleDateString("en-US", {
+                ? new Date(b.createdAt).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                   })
                 : "N/A",
         })),
+
         recentBookings,
-        // --- MODIFIED MAPPING START HERE ---
-        // Top 5 users for the Overview tab
+
+        // Recent Users (Top 5)
         recentUsers: recentUsersDB.map((u) => ({
             name: u.name,
             email: u.email,
-            joined: u.createdAt ? u.createdAt.toLocaleDateString("en-US") : "N/A",
+            joined: u.createdAt
+                ? new Date(u.createdAt).toLocaleDateString("en-US")
+                : "N/A",
         })),
-        // All users for the dedicated Users tab
-        allUsers: allUsersDB.map((u) => ({ // <-- NEW PROPERTY
+
+        // All Users
+        allUsers: allUsersDB.map((u) => ({
             name: u.name,
             email: u.email,
-            joined: u.createdAt ? u.createdAt.toLocaleDateString("en-US") : "N/A",
+            joined: u.createdAt
+                ? new Date(u.createdAt).toLocaleDateString("en-US")
+                : "N/A",
         })),
-        // --- MODIFIED MAPPING END HERE ---
+
         chartData: {},
     };
 };
@@ -308,6 +326,7 @@ app.get("/login", (req, res) => {
 });
 
 
+
 const MAX_ATTEMPTS = 3;
 const LOCK_TIME = 60; // 60 seconds
 
@@ -322,14 +341,14 @@ app.post("/login", async (req, res) => {
     const lockKey = `login:lock:${email}`;
 
     // 1️⃣ CHECK LOCK FIRST
-    const isLocked = await redisClient.get(lockKey);
-    if (isLocked) {
-      const ttl = await redisClient.ttl(lockKey);
-      return res.render("login", {
-        error: `Too many attempts. Try again after ${ttl} seconds.`,
-        ttl,
-      });
-    }
+    // const isLocked = await redisClient.get(lockKey);
+    // if (isLocked) {
+    //   const ttl = await redisClient.ttl(lockKey);
+    //   return res.render("login", {
+    //     error: `Too many attempts. Try again after ${ttl} seconds.`,
+    //     ttl,
+    //   });
+    // }
 
     // 2️⃣ FETCH USER
     const user = await User.findOne({ email, role });
@@ -337,34 +356,49 @@ app.post("/login", async (req, res) => {
       ? await bcrypt.compare(password, user.password)
       : false;
 
-    // 3️⃣ WRONG PASSWORD
-    if (!user || !passwordOk) {
-      const attempts = await redisClient.incr(attemptsKey);
 
-      // set TTL ONLY once
-      if (attempts === 1) {
-        await redisClient.expire(attemptsKey, LOCK_TIME);
-      }
+
+
+
+
+if (!user || !passwordOk) {
+  return res.render("login", {
+    error: "Invalid credentials",
+    ttl: 0,
+  });
+}
+
+
+
+
+    // 3️⃣ WRONG PASSWORD
+    // if (!user || !passwordOk) {
+    //   const attempts = await redisClient.incr(attemptsKey);
+
+    //   // set TTL ONLY once
+    //   if (attempts === 1) {
+    //     await redisClient.expire(attemptsKey, LOCK_TIME);
+    //   }
 
       // LOCK USER
-      if (attempts >= MAX_ATTEMPTS) {
-        await redisClient.set(lockKey, "LOCKED", { EX: LOCK_TIME });
-        const ttl = await redisClient.ttl(lockKey);
-        return res.render("login", {
-          error: `Account locked for ${ttl} seconds.`,
-          ttl,
-        });
-      }
+    //   if (attempts >= MAX_ATTEMPTS) {
+    //     await redisClient.set(lockKey, "LOCKED", { EX: LOCK_TIME });
+    //     const ttl = await redisClient.ttl(lockKey);
+    //     return res.render("login", {
+    //       error: `Account locked for ${ttl} seconds.`,
+    //       ttl,
+    //     });
+    //   }
 
-      return res.render("login", {
-        error: `Invalid credentials. ${MAX_ATTEMPTS - attempts} attempts left.`,
-        ttl: 0,
-      });
-    }
+    //   return res.render("login", {
+    //     error: `Invalid credentials. ${MAX_ATTEMPTS - attempts} attempts left.`,
+    //     ttl: 0,
+    //   });
+    // }
 
-    // 4️⃣ SUCCESS → RESET EVERYTHING
-    await redisClient.del(attemptsKey);
-    await redisClient.del(lockKey);
+    // // 4️⃣ SUCCESS → RESET EVERYTHING
+    // await redisClient.del(attemptsKey);
+    // await redisClient.del(lockKey);
 
     createTokenAndSetCookie(res, {
       id: user._id,
@@ -495,12 +529,32 @@ app.post("/about/rate", async (req, res) => {
         const count = reviews.length;
         const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / count).toFixed(1);
 
-        await transporter.sendMail({
-            from: "krishna1234isha@gmail.com",
-            to: REVIEW_NOTIFICATION_EMAIL,
-            subject: "⭐ New Customer Review Posted on Converza! ⭐",
-            text: `A new ${newReview.rating}-star review has been submitted on Converza.\nReviewer: ${newReview.name}\nRating: ${newReview.rating} out of 5\nComment: ${newReview.comment || 'No comment'}\nDate: ${newReview.createdAt.toLocaleString()}\nCurrent Average Rating: ${avg} (${count} reviews)`,
-        });
+
+
+
+
+
+
+
+
+
+        // try sending email separately (won’t break app)
+try {
+    await transporter.sendMail({
+        from: "krishna1234isha@gmail.com",
+        to: REVIEW_NOTIFICATION_EMAIL,
+        subject: "⭐ New Customer Review Posted on Converza! ⭐",
+        text: `A new ${newReview.rating}-star review has been submitted.\nReviewer: ${newReview.name}`
+    });
+} catch (emailError) {
+    console.log("Email failed but review saved:", emailError.message);
+}
+
+
+
+
+
+
 
         res.json({ message: "Review submitted successfully", review: newReview, avg, count });
     } catch (error) {
@@ -510,45 +564,60 @@ app.post("/about/rate", async (req, res) => {
 });
 
 // ----------------- Events -----------------
-const getCategories = () => [...new Set(mockEvents.map(e => e.category))].sort();
+//const getCategories = () => [...new Set(mockEvents.map(e => e.category))].sort();
+const getCategories = async () => {
+    const categories = await Event.distinct("category");
+    return categories.sort();
+};
 
-app.get("/events", requireAuth, (req, res) => {
+app.get("/events", requireAuth, async (req, res) => {
     const { category, query } = req.query;
-    const allCategories = getCategories();
-    const currentCategory = category && allCategories.includes(category) ? category : allCategories[0] || null;
 
-    let filteredEvents = mockEvents;
-    const safeQuery = String(query || "").trim();
+const allCategories = await getCategories();
 
-    if (currentCategory) filteredEvents = filteredEvents.filter(e => e.category === currentCategory);
-    if (safeQuery.length > 0) {
-        const lowerCaseQuery = safeQuery.toLowerCase();
-        filteredEvents = filteredEvents.filter(
-            e => e.name.toLowerCase().includes(lowerCaseQuery) || e.location.toLowerCase().includes(lowerCaseQuery)
-        );
-    }
+const filter = {};
 
-    filteredEvents.sort((a, b) => a.startTime - b.startTime);
+// ✅ Apply filter ONLY if category is selected and not "All"
+if (category && category !== "All") {
+    filter.category = category;
+}
 
-    res.render("events-list", { events: filteredEvents, allCategories, selectedCategory: currentCategory, searchQuery: query || "" });
+// ✅ Search filter
+if (query) {
+    filter.$or = [
+        { name: { $regex: query, $options: "i" } },
+        { location: { $regex: query, $options: "i" } }
+    ];
+}
+
+const filteredEvents = await Event.find(filter).sort({ startTime: 1 });
+
+const selectedCategory = category ? category : "All";
+
+res.render("events-list", {
+    events: filteredEvents,
+    allCategories,
+    selectedCategory,
+    searchQuery: query || ""
+});
 });
 
 app.get("/events-list", requireAuth, (req, res) => res.redirect("/events"));
 
 // ----------------- Booking Routes -----------------
-app.get("/book/:eventId", requireAuth, (req, res) => {
-    const event = mockEvents.find(e => e._id === req.params.eventId);
+app.get("/book/:eventId", requireAuth, async (req, res) => {
+    const event = await Event.findById(req.params.eventId);
     if (event) res.render("book-ticket", { event });
     else res.status(404).send("Event not found.");
 });
-
 app.post("/api/bookings", requireAuth, async (req, res) => {
     try {
-        const { eventId, fullName, contactNo, location, ticketType, ticketsQuantity, pricePerTicket, totalAmount, paymentMethod } = req.body;
-        const event = mockEvents.find(e => e._id === eventId);
+        const { ticketId,eventId, fullName, contactNo, location, ticketType, ticketsQuantity, pricePerTicket, totalAmount, paymentMethod } = req.body;
+        const event = await Event.findById(eventId);
         if (!event) return res.status(400).send("Invalid event ID.");
 
         const newBooking = new Booking({
+             ticketId,
             eventId,
             eventName: event.name,
             fullName,
@@ -563,6 +632,29 @@ app.post("/api/bookings", requireAuth, async (req, res) => {
         });
 
         await newBooking.save();
+const qrData = `http://192.168.1.10:3000/ticket/${ticketId}`;
+
+const qrCodeImage = await QRCode.toDataURL(qrData);
+
+
+// ✅ ADD EMAIL HERE
+const bookingData = {
+    name: fullName,
+    event: event.name,
+    date: new Date(event.startTime).toLocaleString("en-IN", {
+    dateStyle: "long",
+    timeStyle: "short"
+}),
+    seats: ticketsQuantity,
+    price: totalAmount
+};
+
+const userEmail = req.user.email;
+
+await sendTicketEmail(userEmail, bookingData, qrCodeImage);
+
+
+
 
         res.render("success", { message: "Your tickets have been booked successfully!", bookingDetails: newBooking, eventName: event.name, returnLink: "/events" });
     } catch (error) {
@@ -571,27 +663,76 @@ app.post("/api/bookings", requireAuth, async (req, res) => {
     }
 });
 
+app.post("/book-ticket", requireAuth, async (req, res) => {
+    try {
+
+        const ticketId = "EVT" + Date.now();
+
+        const booking = new Booking({
+            ...req.body,
+            ticketId
+        });
+
+        await booking.save();
+
+        // QR CODE
+      const qrData = `http://192.168.1.10:3000/ticket/${ticketId}`;
+        const qrCodeImage = await QRCode.toDataURL(qrData);
+        console.log("QR GENERATED:", qrCodeImage);
+
+        // EMAIL
+        const userEmail = req.user.email;
+
+       await sendTicketEmail(userEmail, bookingData, qrCodeImage);
+
+        res.send("Ticket booked successfully 🎉");
+
+    } catch (error) {
+        console.log(error);
+        res.send("Booking failed");
+    }
+});
+app.get("/ticket/:ticketId", async (req, res) => {
+    const booking = await Booking.findOne({ ticketId: req.params.ticketId });
+
+    if (!booking) return res.send("Invalid Ticket ❌");
+
+    res.render("ticket", { booking });
+});
+
 // ----------------- Contact Routes -----------------
 app.get("/contact", (req, res) => res.render("contact"));
 
 app.post("/send-email", async (req, res) => {
     const { name, email, message } = req.body;
-    const CONTACT_EMAIL = "deepalirana518@gmail.com";
+    const CONTACT_EMAIL = "goyalananya555@gmail.com";
 
-    if (!name || !email || !message) return res.status(400).json({ message: "❌ Please fill all fields" });
+    if (!name || !email || !message) {
+        return res.status(400).json({ message: "❌ Please fill all fields" });
+    }
 
     try {
+        // ✅ Save to MongoDB
         await ContactMessage.create({ name, email, message });
-        await transporter.sendMail({
-            from: `"${name}" <${email}>`,
-            to: CONTACT_EMAIL,
-            subject: `New message from ${name}`,
-            text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
-        });
-        res.json({ message: "Email sent successfully!" });
+
+        // ✅ Try email separately (IMPORTANT FIX)
+        try {
+            await transporter.sendMail({
+                from: `"${name}" <${email}>`,
+                to: CONTACT_EMAIL,
+                subject: `New message from ${name}`,
+                text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
+            });
+        } catch (emailError) {
+            console.log("Email failed but message saved:", emailError.message);
+        }
+
+        // ✅ Always success response
+        res.json({ message: "Message saved successfully!" });
+
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "❌ Failed to send email." });
+        res.status(500).json({ message: "Server error" });
     }
 });
 //-------------------------------------
@@ -644,6 +785,78 @@ app.post("/save-banner", async (req, res) => {
     res.status(500).json({ ok: false, message: "Server error" });
   }
 });
+
+app.get("/forgot-password", (req, res) => {
+  res.render("forgot-password");
+});
+app.post("/forgot-password", async (req, res) => {
+
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return res.send("User not found");
+  }
+
+  const crypto = require("crypto");
+
+  const token = crypto.randomBytes(32).toString("hex");
+
+  user.resetToken = token;
+  user.resetTokenExpire = Date.now() + 3600000;
+
+  await user.save();
+
+  // EMAIL SENDING PART
+  const nodemailer = require("nodemailer");
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "ishita160217@gmail.com",
+      pass: "lton syge sywf trbt"
+    }
+  });
+
+  const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+  await transporter.sendMail({
+    to: user.email,
+    subject: "Password Reset",
+    html: `<p>Click the link below to reset your password:</p>
+           <a href="${resetLink}">${resetLink}</a>`
+  });
+
+  res.json({ success:true, message:"Reset link sent to your email" });
+});
+
+
+app.get("/reset-password/:token", (req, res) => {
+  res.render("reset-password", { token: req.params.token });
+});
+app.post("/reset-password/:token", async (req, res) => {
+
+  const user = await User.findOne({
+    resetToken: req.params.token,
+    resetTokenExpire: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.send("Token invalid or expired");
+  }
+
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+  user.password = hashedPassword;
+
+  user.resetToken = undefined;
+  user.resetTokenExpire = undefined;
+
+  await user.save();
+
+  res.send("Password reset successful. You can now login.");
+});
+
+
 
 
 // ----------------- Share Link -----------------
