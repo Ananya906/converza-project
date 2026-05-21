@@ -807,15 +807,15 @@ app.post("/forgot-password", async (req, res) => {
   await user.save();
 
   // EMAIL SENDING PART
-  const nodemailer = require("nodemailer");
+//   const nodemailer = require("nodemailer");
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "ishita160217@gmail.com",
-      pass: "lton syge sywf trbt"
-    }
-  });
+//   const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: "ishita160217@gmail.com",
+//       pass: "lton syge sywf trbt"
+//     }
+//   });
 
   const resetLink = `https://converza-project.onrender.com/reset-password/${token}`;
 
