@@ -817,7 +817,7 @@ app.post("/forgot-password", async (req, res) => {
     }
   });
 
-  const resetLink = `http://localhost:3000/reset-password/${token}`;
+  const resetLink = `https://converza-project.onrender.com/reset-password/${token}`;
 
   await transporter.sendMail({
     to: user.email,
