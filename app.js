@@ -110,13 +110,14 @@ mongoose
 
 // ----------------- Nodemailer Setup -----------------
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
-
 
 
 // ----------------- View Engine -----------------
@@ -791,20 +792,23 @@ app.get("/forgot-password", (req, res) => {
 });
 app.post("/forgot-password", async (req, res) => {
 
-  const user = await User.findOne({ email: req.body.email });
+  try {
 
-  if (!user) {
-    return res.send("User not found");
-  }
+    const user = await User.findOne({ email: req.body.email });
 
-  const crypto = require("crypto");
+    if (!user) {
+      return res.json({
+        success:false,
+        message:"User not found"
+      });
+    }
 
-  const token = crypto.randomBytes(32).toString("hex");
+    const token = crypto.randomBytes(32).toString("hex");
 
-  user.resetToken = token;
-  user.resetTokenExpire = Date.now() + 3600000;
+    user.resetToken = token;
+    user.resetTokenExpire = Date.now() + 3600000;
 
-  await user.save();
+    await user.save();
 
   // EMAIL SENDING PART
 //   const nodemailer = require("nodemailer");
@@ -827,7 +831,22 @@ app.post("/forgot-password", async (req, res) => {
   });
 
   res.json({ success:true, message:"Reset link sent to your email" });
+
+
+  } catch(err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success:false,
+      message:"Email sending failed"
+    });
+
+  }
+
 });
+
+
 
 
 app.get("/reset-password/:token", (req, res) => {
